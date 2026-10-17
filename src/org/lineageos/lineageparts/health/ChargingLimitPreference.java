@@ -49,7 +49,8 @@ public class ChargingLimitPreference extends SliderPreference
         mSlider.setLabelBehavior(LabelFormatter.LABEL_FLOATING);
         mSlider.setStepSize(1);
         mSlider.setTickVisible(false);
-        mSlider.setValueFrom(70);
+        // Matches LineageSettings.System.CHARGING_CONTROL_LIMIT_VALIDATOR.
+        mSlider.setValueFrom(50);
         mSlider.setValueTo(100);
 
         int currLimit = getSetting();
