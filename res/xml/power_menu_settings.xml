@@ -12,6 +12,12 @@
             android:key="power_menu_items"
             android:title="@string/power_menu_items_title">
 
+        <MultiSelectListPreference
+            android:key="pinned_apps"
+            android:title="@string/power_menu_pinned_apps_title"
+            android:dialogTitle="@string/power_menu_pinned_apps_title"
+            android:persistent="false" />
+
         <CheckBoxPreference
             android:key="screenshot"
             android:title="@string/power_menu_screenshot_title"
