@@ -243,6 +243,9 @@ public class DeviceUtils {
     }
 
     public static boolean deviceSupportsFlashLight(@NonNull Context context) {
+        if (!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
+            return false;
+        }
         CameraManager cameraManager = context.getSystemService(CameraManager.class);
         try {
             String[] ids = cameraManager.getCameraIdList();
