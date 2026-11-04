@@ -46,6 +46,7 @@ import org.lineageos.lineageparts.search.BaseSearchIndexProvider;
 import org.lineageos.lineageparts.search.Searchable;
 import org.lineageos.lineageparts.utils.DeviceUtils;
 import org.lineageos.lineageparts.utils.TelephonyUtils;
+import org.lineageos.lineageparts.utils.WheelSideButtonUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -259,7 +260,8 @@ public class ButtonSettings extends SettingsPreferenceFragment
         updateDisableNavkeysCategories(mDisableNavigationKeys.isChecked(), /* force */ true);
 
         if (hasPowerKey) {
-            if (!TelephonyUtils.isVoiceCapable(requireActivity())) {
+            if (WheelSideButtonUtils.isEnabled(requireActivity())
+                    || !TelephonyUtils.isVoiceCapable(requireActivity())) {
                 powerCategory.removePreference(mPowerEndCall);
                 mPowerEndCall = null;
             }
@@ -381,6 +383,14 @@ public class ButtonSettings extends SettingsPreferenceFragment
             prefScreen.removePreference(cameraCategory);
         }
 
+        // Synthetic volume events cannot provide holds or button chords.
+        if (!res.getBoolean(R.bool.config_hasPhysicalVolumeKeys)) {
+            volumeCategory.removePreference(findPreference(KEY_VOLUME_MUSIC_CONTROLS));
+        }
+        if (!hasVolumeKeys || !res.getBoolean(R.bool.config_hasPhysicalVolumeKeys)) {
+            extrasCategory.removePreference(findPreference(KEY_CLICK_PARTIAL_SCREENSHOT));
+        }
+
         if (hasVolumeKeys) {
             if (!showVolumeWake) {
                 volumeCategory.removePreference(findPreference(KEY_VOLUME_WAKE_SCREEN));
@@ -401,8 +411,6 @@ public class ButtonSettings extends SettingsPreferenceFragment
             if (mSwapVolumeButtons != null) {
                 mSwapVolumeButtons.setChecked(swapVolumeKeys > 0);
             }
-        } else {
-            extrasCategory.removePreference(findPreference(KEY_CLICK_PARTIAL_SCREENSHOT));
         }
         if (!hasVolumeKeys || volumeCategory.getPreferenceCount() == 0) {
             prefScreen.removePreference(volumeCategory);
@@ -852,6 +860,14 @@ public class ButtonSettings extends SettingsPreferenceFragment
         @Override
         public Set<String> getNonIndexableKeys(Context context) {
             final Set<String> result = new ArraySet<>();
+
+            if (!DeviceUtils.hasPowerKey() || WheelSideButtonUtils.isEnabled(context)) {
+                result.add(KEY_POWER_END_CALL);
+            }
+            if (!context.getResources().getBoolean(R.bool.config_hasPhysicalVolumeKeys)) {
+                result.add(KEY_VOLUME_MUSIC_CONTROLS);
+                result.add(KEY_CLICK_PARTIAL_SCREENSHOT);
+            }
 
             if (!TelephonyUtils.isVoiceCapable(context)) {
                 result.add(KEY_POWER_END_CALL);

@@ -27,4 +27,7 @@
              (true for some tablets) -->
     <integer name="config_volumeRockerVsDisplayOrientation">1</integer>
 
+    <!-- Whether the device has physical volume keys for holds and chords. -->
+    <bool name="config_hasPhysicalVolumeKeys">true</bool>
+
 </resources>
